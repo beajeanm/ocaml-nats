@@ -1,0 +1,4 @@
+profile = ocamlformat
+parse-docstrings = true
+wrap-comments = true
+

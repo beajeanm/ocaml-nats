@@ -1,0 +1,19 @@
+(test
+ (name main)
+ (libraries nats alcotest))
+
+(rule
+ (targets main.ml)
+ (deps
+  (glob_files tests.ml)
+  (glob_files *tests.ml)
+  (glob_files *Tests.ml))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run dryunit gen --framework alcotest))))
+
+(alias
+ (name runtest)
+ (deps
+  (:m main.exe)))

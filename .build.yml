@@ -1,0 +1,24 @@
+image: archlinux
+packages:
+  - m4
+  - opam
+sources:
+  - https://git.sr.ht/~beajeanm/ocaml-nats
+tasks:
+  - opam-setup: |
+     opam init --auto-setup --compiler=ocaml-base-compiler.4.10.0
+     eval $(opam env)
+     opam install dune
+  - dependencies: |
+     cd ocaml-nats
+     opam config exec -- make dependencies
+  - build: |
+     cd ocaml-nats
+     opam config exec -- make build
+  - test: |
+     cd ocaml-nats
+     opam config exec -- make coverage
+triggers:
+- action: email
+  condition: always
+  to: Jean-Michel Bea <code@jm-bea.net>
