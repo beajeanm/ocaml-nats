@@ -11,7 +11,9 @@ depends: [
   "ocaml" {>= "4.04"}
   "dune" {>= "2.6" & >= "2.6" & build}
   "angstrom" {>= "0.14.1"}
+  "angstrom-lwt-unix" {>= "0.14.1"}
   "ppx_deriving" {>= "4.4"}
+  "lwt" {>= "5.3"}
   "alcotest" {>= "1.1" & with-test}
   "dryunit" {>= "0.5" & with-test}
   "ocamlformat" {>= "0.14" & dev}
