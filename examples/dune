@@ -1,0 +1,13 @@
+(executable
+ (name publish)
+ (modules publish)
+ (libraries nats lwt.unix lwt_ppx)
+ (preprocess
+  (pps lwt_ppx)))
+
+(executable
+ (name echo)
+ (modules echo)
+ (libraries nats lwt.unix lwt_ppx)
+ (preprocess
+  (pps lwt_ppx)))
