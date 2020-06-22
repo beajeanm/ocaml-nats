@@ -44,5 +44,4 @@ let pub ~msg ~subject client =
 let sub ~subject ?(queue = "") client =
   let sid, stream = Subscriptions.sub client.subscriptions in
   let formatted_msg = Printf.sprintf "sub %s %s %s\r\n" subject queue sid in
-  Lwt_io.printl formatted_msg
-  >>= fun _ -> Lwt_io.write client.out_chan formatted_msg >|= fun () -> stream
+  Lwt_io.write client.out_chan formatted_msg >|= fun () -> stream

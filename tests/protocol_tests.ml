@@ -26,10 +26,6 @@ let test_ping () =
   let ping_msg = parse "pIng\r\n" in
   Alcotest.check t_result "parsed ping" (Ok Ping) ping_msg
 
-let test_pong () =
-  let ping_msg = parse "PoNg\r\n" in
-  Alcotest.check t_result "parsed pong" (Ok Pong) ping_msg
-
 let test_ok () =
   let ok_msg = parse "+OK\r\n" in
   Alcotest.check t_result "parsed Ok" (Ok Ok) ok_msg

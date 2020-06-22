@@ -23,7 +23,6 @@ type msg_t =
 
 type t =
   | Ping
-  | Pong
   | Ok
   | Err of string
   | Info of (string * info_t) list

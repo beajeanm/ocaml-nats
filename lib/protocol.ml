@@ -30,8 +30,6 @@ let quoted_string quote_mark =
 
 let ping = string_ci "ping" *> eol *> return Ping
 
-let pong = string_ci "pong" *> eol *> return Pong
-
 let ok = char '+' *> string_ci "ok" *> eol *> return Ok
 
 let err =
@@ -139,7 +137,7 @@ let parser =
   | '-' ->
       err
   | 'P' | 'p' ->
-      ping <|> pong
+      ping
   | 'I' ->
       info
   | 'M' ->
