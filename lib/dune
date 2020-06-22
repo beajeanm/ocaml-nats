@@ -2,5 +2,5 @@
  (name nats)
  (public_name nats)
  (preprocess
-  (pps ppx_deriving.std bisect_ppx --conditional))
+  (pps lwt_ppx ppx_deriving.std bisect_ppx --conditional))
  (libraries angstrom angstrom.lwt-unix lwt.unix uuidm containers))

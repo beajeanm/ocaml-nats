@@ -8,6 +8,8 @@ type sid = string
 
 let init () = {state= SubsMap.empty}
 
+let shutdown subs = SubsMap.iter (fun _ push -> push None) subs.state
+
 let uuid_gen =
   Random.self_init () ;
   Random.get_state () |> Uuidm.v4_gen

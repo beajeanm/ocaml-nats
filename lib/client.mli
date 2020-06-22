@@ -6,3 +6,5 @@ val sub :
   subject:string -> ?queue:string -> t -> Messages.msg_t Lwt_stream.t Lwt.t
 
 val start : host:string -> port:int -> t Lwt.t
+
+val shutdown : t -> unit Lwt.t
