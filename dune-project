@@ -24,6 +24,8 @@
     (angstrom-lwt-unix (>= 0.14.1))
     (ppx_deriving (>= 4.4))
     (lwt (>= 5.3))
+    (uuidm (>= 0.9))
+    (containers (>= 2.8))
     (alcotest (and (>= 1.1) :with-test))
     (dryunit (and (>= 0.5) :with-test))
     (ocamlformat (and (>= 0.14) :dev))

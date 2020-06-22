@@ -3,4 +3,4 @@
  (public_name nats)
  (preprocess
   (pps ppx_deriving.std bisect_ppx --conditional))
- (libraries angstrom angstrom.lwt-unix lwt.unix))
+ (libraries angstrom angstrom.lwt-unix lwt.unix uuidm containers))
