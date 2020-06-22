@@ -5,7 +5,6 @@ type t =
   ; completion: unit Lwt.t
   ; subscriptions: Subscriptions.t }
 
-
 let create_connection host port =
   let socket = Lwt_unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
   let host = Unix.gethostbyname host in
@@ -43,7 +42,7 @@ let pub ~msg ~subject client =
   Lwt_io.write client.out_chan formatted_msg
 
 let sub ~subject ?(queue = "") client =
-  let (sid, stream) = Subscriptions.sub client.subscriptions in
+  let sid, stream = Subscriptions.sub client.subscriptions in
   let formatted_msg = Printf.sprintf "sub %s %s %s\r\n" subject queue sid in
   Lwt_io.printl formatted_msg
   >>= fun _ -> Lwt_io.write client.out_chan formatted_msg >|= fun () -> stream
