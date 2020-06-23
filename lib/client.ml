@@ -1,3 +1,5 @@
+open Containers
+
 type t =
   { out_chan: Lwt_io.output_channel
   ; in_chan: Lwt_io.input_channel
@@ -36,22 +38,32 @@ let start ~host ~port =
   Lwt.async @@ parse_all k in_chan resolver ;
   Lwt.return {out_chan; in_chan; completion= promise; subscriptions}
 
-let pub ~msg ~subject client =
+let safe_close channel =
+  try%lwt Lwt_io.close channel with _ -> Lwt.return_unit
+
+let close client =
+  let _ = Subscriptions.shutdown client.subscriptions in
+  let%lwt _ = safe_close client.out_chan in
+  safe_close client.in_chan
+
+let pub ~msg ~subject ?(reply_to = "") client =
   let formatted_msg =
-    Printf.sprintf "pub %s %i\r\n%s\r\n" subject (String.length msg) msg
+    Printf.sprintf "pub %s %s %i\r\n%s\r\n" subject reply_to (String.length msg)
+      msg
   in
   Lwt_io.write client.out_chan formatted_msg
 
-let sub ~subject ?(queue = "") client =
-  let sid, stream = Subscriptions.sub client.subscriptions in
+let sub ~subject ?(sid = None) ?(queue = "") client =
+  let sid =
+    Option.get_lazy (fun () -> Subscriptions.next_sid client.subscriptions) sid
+  in
+  let stream = Subscriptions.sub sid client.subscriptions in
   let formatted_msg = Printf.sprintf "sub %s %s %s\r\n" subject queue sid in
   let%lwt _ = Lwt_io.write client.out_chan formatted_msg in
   Lwt.return stream
 
-let safe_close channel =
-  try%lwt Lwt_io.close channel with _ -> Lwt.return_unit
-
-let shutdown client =
-  let _ = Subscriptions.shutdown client.subscriptions in
-  let%lwt _ = safe_close client.out_chan in
-  safe_close client.in_chan
+let req ~msg ~subject client =
+  let sid = Subscriptions.next_sid client.subscriptions in
+  let%lwt messages = sub ~subject:sid ~sid:(Some sid) client in
+  let%lwt _ = pub ~msg ~subject ~reply_to:sid client in
+  Lwt_stream.next messages

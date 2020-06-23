@@ -11,7 +11,7 @@ let main () =
       ; ("--port", Int (fun p -> port := p), "port")
       ; ("--nbmsgs", Int (fun n -> nb_msgs := n), "number of messages") ]
   in
-  Arg.parse spec ignore "echo --host host --port port" ;
+  Arg.parse spec ignore "publish --host host --port port --nbmsgs nb" ;
   let%lwt client = Client.start ~host:!host ~port:!port in
   let rec loop counter subject =
     if counter == !nb_msgs then Lwt.return_unit

@@ -6,8 +6,15 @@
   (pps lwt_ppx)))
 
 (executable
- (name echo)
- (modules echo)
+ (name subscribe)
+ (modules subscribe)
+ (libraries nats lwt.unix lwt_ppx)
+ (preprocess
+  (pps lwt_ppx)))
+
+(executable
+ (name request)
+ (modules request)
  (libraries nats lwt.unix lwt_ppx)
  (preprocess
   (pps lwt_ppx)))
