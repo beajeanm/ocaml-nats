@@ -23,8 +23,10 @@ let t_msg = Alcotest.testable Messages.pp Messages.equal
 let t_result = Alcotest.(result t_msg string)
 
 let test_ping () =
-  let ping_msg = parse "pIng\r\n" in
-  Alcotest.check t_result "parsed ping" (Ok Ping) ping_msg
+  let pings = [parse "pIng\r\n"; parse "PING\r\n"] in
+  List.iter
+    (fun ping_msg -> Alcotest.check t_result "parsed ping" (Ok Ping) ping_msg)
+    pings
 
 let test_ok () =
   let ok_msg = parse "+OK\r\n" in
@@ -39,7 +41,7 @@ let test_info () =
   let info_raw_msg =
     String.concat ""
       [ {|INFO {"server_id":"1ec445b504f4edfb4cf7927c707dd717","version":"0.6.6","go":"go1.4.2","host":"0.0.0.0",|}
-      ; {|"port":4222,"auth_required":false,"ssl_required":false,"max_payload":1048576}|}
+      ; {|"port":4222,"auth_required":false,"ssl_required":true,"max_payload":1048576}|}
       ; " \r\n" ]
   in
   let opts =
@@ -50,7 +52,7 @@ let test_info () =
     ; ("host", String "0.0.0.0")
     ; ("port", Number 4222)
     ; ("auth_required", False)
-    ; ("ssl_required", False)
+    ; ("ssl_required", True)
     ; ("max_payload", Number 1048576) ]
   in
   let expected = Messages.Info opts in
@@ -66,7 +68,7 @@ let test_msg_1 () =
     (parse msg_raw)
 
 let test_msg_2 () =
-  let msg_raw = "MSG FOO.BAR 9 INBOX.34 11\r\nHello World\r\n" in
+  let msg_raw = "MSG\tFOO.BAR 9 INBOX.34 11\r\nHello World\r\n" in
   let expected =
     let open Messages in
     Msg
@@ -113,3 +115,7 @@ let test_invalid_subject2 () =
   let msg_raw = "MSG * 9 INBOX.34 11\r\nHello World\r\n" in
   let expected = ": Invalid subject *" in
   Alcotest.check t_result "invalid subject" (Error expected) (parse msg_raw)
+
+let test_invalid_input () =
+  Alcotest.check t_result "Invalid input" (Error ": Invalid input")
+    (parse "random string")

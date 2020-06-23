@@ -99,11 +99,8 @@ let subject =
         None
   in
   Angstrom.scan_state Start token_extractor
-  >>= fun state ->
-  match state with
+  >>= function
   | Success buffer ->
-      Angstrom.return (Buffer.contents buffer)
-  | Token buffer ->
       Angstrom.return (Buffer.contents buffer)
   | Error msg ->
       Angstrom.fail msg
@@ -143,4 +140,4 @@ let parser =
   | 'M' ->
       msg
   | _ ->
-      fail "invalid input"
+      fail "Invalid input"
