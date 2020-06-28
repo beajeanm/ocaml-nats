@@ -19,7 +19,6 @@ clean:
 
 coverage: clean
 	BISECT_ENABLE=yes dune runtest --no-buffer
-	bisect-ppx-report html
 	bisect-ppx-report summary
 
 install:

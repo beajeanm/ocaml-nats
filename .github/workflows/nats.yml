@@ -1,0 +1,22 @@
+name: build
+on: [push, pull_request]
+jobs:
+  run:
+    name: Build
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest]
+        ocaml-version: ["4.09.1", "4.10.0"]
+    steps:
+      - uses: actions/checkout@master
+      - uses: avsm/setup-ocaml@master
+        with:
+          ocaml-version: ${{ matrix.ocaml-version }}
+      - run: opam pin add nats.dev -n .
+      - run: opam depext -yt nats
+      - run: opam install -t . --deps-only
+      - run: opam exec -- dune build
+      - run: opam exec -- dune runtest
+      - run: opam exec -- make coverage
+
